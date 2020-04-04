@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-TODO Description
+Module with speech process function
+GoogleAPI is operated here
 """
 from google.cloud import speech
 from google.cloud.speech import enums

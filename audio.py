@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-TODO Description
+Module with functions which process speech from microphone
 """
 import pyaudio
 import sys
