@@ -4,9 +4,44 @@
 Module with functions which process speech from microphone
 """
 import pyaudio
+import wave
 import sys
 import re
 from six.moves import queue
+
+
+class PlaySound(object):
+    """
+    Play warning sound
+    """
+    def __init__(self):
+
+        self.chunk = 1024
+        self.no_internet = wave.open('files/nointernet.wav', 'rb')
+        self.wrong_command = wave.open('files/wrong_command.wav', 'rb')
+
+    def __enter__(self):
+        self.__pyaudio_interface = pyaudio.PyAudio()
+        self.__pyaudio_stream = self.__pyaudio_interface.open(
+            format=8, channels=1, rate=48000, output=True)
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.__pyaudio_stream.stop_stream()
+        self.__pyaudio_stream.close()
+        self.__pyaudio_interface.terminate()
+
+    def play_nointernet(self):
+        data = self.no_internet.readframes(self.chunk)
+        while data != b'':
+            self.__pyaudio_stream.write(data)
+            data = self.no_internet.readframes(self.chunk)
+
+    def play_wrong_command(self):
+        data = self.wrong_command.readframes(self.chunk)
+        while data != b'':
+            self.__pyaudio_stream.write(data)
+            data = self.wrong_command.readframes(self.chunk)
 
 
 class MicrophoneStream(object):
@@ -88,7 +123,6 @@ def listen_print_loop(responses, metrics):
                 if re.search(r'\b(exit|quit)\b', transcript, re.I):
                     print('Exiting..')
                     break
-
                 num_chars_printed = 0
     except KeyboardInterrupt as err:
         print(err)

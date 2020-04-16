@@ -3,6 +3,7 @@
 """
 Control GPIO on Raspberry PI
 """
+from audio import PlaySound
 from gpiozero import LED
 from time import sleep
 import enum
@@ -35,7 +36,7 @@ class GpioController:
             sleep(4)
             self.__white_led.off()
         if mode is BlinkMethod.Pulsed:
-            for i in range(1, 4):
+            for _ in range(1, 4):
                 self.__white_led.on()
                 sleep(1)
                 self.__white_led.off()
@@ -47,7 +48,7 @@ class GpioController:
             sleep(4)
             self.__blue_led.off()
         if mode is BlinkMethod.Pulsed:
-            for i in range(1, 4):
+            for _ in range(1, 4):
                 self.__blue_led.on()
                 sleep(1)
                 self.__blue_led.off()
@@ -59,7 +60,7 @@ class GpioController:
             sleep(4)
             self.__red_led.off()
         if mode is BlinkMethod.Pulsed:
-            for i in range(1, 4):
+            for _ in range(1, 4):
                 self.__red_led.on()
                 sleep(1)
                 self.__red_led.off()
@@ -71,7 +72,7 @@ class GpioController:
             sleep(4)
             self.__green_led.off()
         if mode is BlinkMethod.Pulsed:
-            for i in range(1, 4):
+            for _ in range(1, 4):
                 self.__green_led.on()
                 sleep(1)
                 self.__green_led.off()
@@ -83,7 +84,7 @@ class GpioController:
             sleep(4)
             self.__yellow_led.off()
         if mode is BlinkMethod.Pulsed:
-            for i in range(1, 4):
+            for _ in range(1, 4):
                 self.__yellow_led.on()
                 sleep(1)
                 self.__yellow_led.off()
@@ -114,34 +115,37 @@ class GpioController:
     def make_decision(self, transcr):
         if transcr == 'biały':
             self.blink_led(Colors.White)
-        if transcr == 'niebieski':
+        elif transcr == 'niebieski':
             self.blink_led(Colors.Blue)
-        if transcr == 'czerwony':
+        elif transcr == 'czerwony':
             self.blink_led(Colors.Red)
-        if transcr == 'zielony':
+        elif transcr == 'zielony':
             self.blink_led(Colors.Green)
-        if transcr == 'żółty':
+        elif transcr == 'żółty':
             self.blink_led(Colors.Yellow)
-        if transcr == 'okno otwórz':
+        elif transcr == 'okno otwórz':
             self.blink_led_white(BlinkMethod.Pulsed)
-        if transcr == 'okno zamknij':
+        elif transcr == 'okno zamknij':
             self.blink_led_white(BlinkMethod.Continuous)
-        if transcr == 'temperaturę zwiększ':
+        elif transcr == 'temperaturę zwiększ':
             self.blink_led_blue(BlinkMethod.Pulsed)
-        if transcr == 'temperaturę zmniejsz':
+        elif transcr == 'temperaturę zmniejsz':
             self.blink_led_blue(BlinkMethod.Continuous)
-        if transcr == 'radio głośniej':
+        elif transcr == 'radio głośniej':
             self.blink_led_red(BlinkMethod.Pulsed)
-        if transcr == 'radio ciszej':
+        elif transcr == 'radio ciszej':
             self.blink_led_red(BlinkMethod.Continuous)
-        if transcr == 'nawiew szybciej':
+        elif transcr == 'nawiew szybciej':
             self.blink_led_green(BlinkMethod.Pulsed)
-        if transcr == 'nawiew wolniej':
+        elif transcr == 'nawiew wolniej':
             self.blink_led_green(BlinkMethod.Continuous)
-        if transcr == 'pulpit jaśniej':
+        elif transcr == 'pulpit jaśniej':
             self.blink_led_yellow(BlinkMethod.Pulsed)
-        if transcr == 'pulpit ciemniej':
+        elif transcr == 'pulpit ciemniej':
             self.blink_led_yellow(BlinkMethod.Continuous)
+        else:
+            with PlaySound() as play:
+                play.play_wrong_command()
 
 
 def run_gpio_controller_thread(metrics):
